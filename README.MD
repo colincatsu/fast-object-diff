@@ -79,7 +79,62 @@ Fast-object-diff就这样诞生.
 
 结果Json格式:
 ```javascript
-[{"diffValue":{"newValue":"2","oldValue":"1"},"logName":"测试a","op":"CHANGE","path":"/a"},{"diffValue":{"newValue":"上海","oldValue":"北京"},"logName":"BList集合.订单编号[1].机场","op":"CHANGE","path":"/bList/1/name"},{"diffValue":{"newValue":"2","oldValue":"1"},"logName":"BList集合.订单编号[2].机场","op":"CHANGE","path":"/bList/2/name"},{"diffValue":{"newValue":null,"oldValue":"[主键]=3 ,[机场]=3 "},"logName":"BList集合.订单编号[3]","op":"REMOVE","path":"/bList/3"},{"diffValue":{"newValue":null,"oldValue":"2019-09-09 02:16:30"},"logName":"开始时间","op":"REMOVE","path":"/start"},{"diffValue":{"newValue":50.852236,"oldValue":null},"logName":"价格","op":"ADD","path":"/price"}]
+[
+    {
+        "diffValue":{
+            "newValue":"2",
+            "oldValue":"1"
+        },
+        "logName":"测试a",
+        "op":"CHANGE",
+        "path":"/a"
+    },
+    {
+        "diffValue":{
+            "newValue":"上海",
+            "oldValue":"北京"
+        },
+        "logName":"BList集合.订单编号[1].机场",
+        "op":"CHANGE",
+        "path":"/bList/1/name"
+    },
+    {
+        "diffValue":{
+            "newValue":"2",
+            "oldValue":"1"
+        },
+        "logName":"BList集合.订单编号[2].机场",
+        "op":"CHANGE",
+        "path":"/bList/2/name"
+    },
+    {
+        "diffValue":{
+            "newValue":null,
+            "oldValue":"[主键]=3 ,[机场]=3 "
+        },
+        "logName":"BList集合.订单编号[3]",
+        "op":"REMOVE",
+        "path":"/bList/3"
+    },
+    {
+        "diffValue":{
+            "newValue":null,
+            "oldValue":"2019-09-09 02:16:30"
+        },
+        "logName":"开始时间",
+        "op":"REMOVE",
+        "path":"/start"
+    },
+    {
+        "diffValue":{
+            "newValue":50.852236,
+            "oldValue":null
+        },
+        "logName":"价格",
+        "op":"ADD",
+        "path":"/price"
+    }
+]
 ```
 
 也可以直接输出中文日志格式:
