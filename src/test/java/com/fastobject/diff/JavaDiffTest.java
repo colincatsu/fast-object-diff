@@ -6,6 +6,7 @@ import com.fastobject.diff.model.BeanB;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by colinsu
@@ -43,6 +44,8 @@ public class JavaDiffTest {
         list2.add(a2b2);
         final BeanA a2 = new BeanA("2","2",list2);
         a2.setPrice(new BigDecimal("50.852236"));
+        List<DiffWapper> diffWappers = AbstractObjectDiff.generateDiff(a1, a2);
+
 
         String s = ChineseObjectDiff.genChineseDiffStr(a1, a2);
         System.out.println(s);
