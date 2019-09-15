@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * Created by colinsu
  *
- * @date 2019/9/9.
  */
 public class ChineseObjectDiff extends AbstractObjectDiff {
     @Override

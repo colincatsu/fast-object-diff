@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * Created by colinsu
  *
- * @date 2019/9/6.
  */
 public class DiffUtils<T> {
     public final static String CHANGE = "CHANGE";

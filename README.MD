@@ -11,6 +11,15 @@ Fast-object-diff就这样诞生.
 5. 提供基础方法 generateDiff 和扩展方法
 6. 集合中可根据某个key进行对应diff记录,方便乱序中使用diff对比某个Object
 
+maven中央仓库引用:
+
+<dependency>
+  <groupId>com.github.colincatsu</groupId>
+  <artifactId>fast-object-diff</artifactId>
+  <version>1.0</version>
+</dependency>
+
+
 使用方法很简单:
 ```java
     public class BeanA {
