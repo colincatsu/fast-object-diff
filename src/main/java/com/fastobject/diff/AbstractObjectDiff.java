@@ -18,7 +18,6 @@ import java.util.Set;
 /**
  * Created by colinsu
  *
- * @date 2019/9/6.
  */
 public abstract class AbstractObjectDiff {
 
@@ -177,11 +176,11 @@ public abstract class AbstractObjectDiff {
                 return null;
             }
             if (oldTime == null || newTime == null) {
-                return diffUtils.getDiffWapper(path, nameCn, oldTime==null ?null:oldTimeTimeStr, newTime==null?null: newTempTimeStr);
+                return DiffUtils.getDiffWapper(path, nameCn, oldTime==null ?null:oldTimeTimeStr, newTime==null?null: newTempTimeStr);
             }
 
             if (!StringUtils.equals(newTempTimeStr, oldTimeTimeStr)) {
-                return diffUtils.getDiffWapper(path, nameCn, format.format(oldTime), format.format(newTime));
+                return DiffUtils.getDiffWapper(path, nameCn, format.format(oldTime), format.format(newTime));
             }
         } else if ("java.lang.Long".equals(typeName) || Long.TYPE == type) {
             Long oldValue = (Long) field.get(source);
@@ -237,10 +236,10 @@ public abstract class AbstractObjectDiff {
                 return null;
             }
             if (oldTime == null || newTime == null) {
-                return diffUtils.getDiffWapper(path, nameCn, oldTime==null ?null:oldTimeTimeStr, newTime==null?null: newTempTimeStr);
+                return DiffUtils.getDiffWapper(path, nameCn, oldTime==null ?null:oldTimeTimeStr, newTime==null?null: newTempTimeStr);
             }
             if (!StringUtils.equals(newTempTimeStr, oldTimeTimeStr)) {
-                return diffUtils.getDiffWapper(path, nameCn, oldTimeTimeStr, newTempTimeStr);
+                return DiffUtils.getDiffWapper(path, nameCn, oldTimeTimeStr, newTempTimeStr);
             }
         }
         return null;
