@@ -18,6 +18,7 @@ import java.util.Set;
 /**
  * Created by colinsu
  *
+ * @date 2019/9/6.
  */
 public abstract class AbstractObjectDiff {
 
@@ -34,7 +35,7 @@ public abstract class AbstractObjectDiff {
     }
 
     private static List<DiffWapper> generateDiff(String path, String cnName, Object sourceObject, Object targetObject)
-            throws Exception {
+        throws Exception {
         List<DiffWapper> diffWappers = new ArrayList<>();
 
         if (sourceObject == null && targetObject == null) {
@@ -43,8 +44,8 @@ public abstract class AbstractObjectDiff {
 
         if (sourceObject == null || targetObject == null) {
             DiffWapper diffWapper = DiffUtils
-                    .getDiffWapper(path, cnName, (sourceObject == null ? null : getObjectString(sourceObject)),
-                            targetObject == null ? null : getObjectString(targetObject));
+                .getDiffWapper(path, cnName, (sourceObject == null ? null : getObjectString(sourceObject)),
+                    targetObject == null ? null : getObjectString(targetObject));
             diffWappers.add(diffWapper);
             return diffWappers;
         }
@@ -76,6 +77,8 @@ public abstract class AbstractObjectDiff {
                 if (logVo.ignore()){
                     continue;
                 }
+            }else{
+                continue;
             }
             if (Collection.class.isAssignableFrom(type)) {
                 //先判断一下集合
@@ -93,6 +96,9 @@ public abstract class AbstractObjectDiff {
                         keyCnName = keyFieldAnnotation.name();
                         break;
                     }
+                }
+                if (keyField == null){
+                    continue;
                 }
                 keyField.setAccessible(true);
                 for (Object o : newList) {
@@ -134,7 +140,7 @@ public abstract class AbstractObjectDiff {
 
 
     private static DiffWapper generateOneDiffs(String path, String nameCn, Field field, Object source, Object target)
-            throws Exception {
+        throws Exception {
         //判断是普通Object还是Collection
         //过滤一些不需要的key
         //Collection需要根据某个key进行排序,然后比较
@@ -156,7 +162,7 @@ public abstract class AbstractObjectDiff {
             return diffUtils.get(path, nameCn, oldStr, newStr);
         } else if ("java.sql.Timestamp".equals(typeName)) {
             DateFormat format =
-                    new SimpleDateFormat(StringUtils.isBlank(dateFormat) ? "yyyy-MM-dd HH:mm:ss" : dateFormat);
+                new SimpleDateFormat(StringUtils.isBlank(dateFormat) ? "yyyy-MM-dd HH:mm:ss" : dateFormat);
             java.sql.Timestamp newTime = (java.sql.Timestamp) field.get(target);
             java.sql.Timestamp oldTime = (java.sql.Timestamp) field.get(source);
             String newTempTimeStr = "";
@@ -183,8 +189,8 @@ public abstract class AbstractObjectDiff {
             return diffUtils.get(path, nameCn, oldValue, newValue);
 
         } else if ("java.lang.Integer".equals(typeName) || Integer.TYPE == type) {
-            Integer oldValue = field.getInt(source);
-            Integer newValue = field.getInt(target);
+            Integer oldValue =(Integer) field.get(source);
+            Integer newValue = (Integer) field.get(target);
             return diffUtils.get(path, nameCn, oldValue, newValue);
 
         } else if ("java.lang.Boolean".equals(typeName) || Boolean.TYPE == type) {
@@ -195,7 +201,10 @@ public abstract class AbstractObjectDiff {
         } else if ("java.math.BigDecimal".equals(typeName)) {
             //
             BigDecimal oldValue = (BigDecimal)field.get(source);
-            BigDecimal newValue = (BigDecimal)field.get(target);
+            BigDecimal newValue = (BigDecimal)field.get(target) ;
+            if (oldValue!=null && newValue!=null && oldValue.compareTo(newValue) == 0){
+                newValue = oldValue;
+            }
             return diffUtils.get(path, nameCn, oldValue, newValue);
         } else if ("java.lang.Byte".equals(typeName) || Byte.TYPE == type) {
             //预留不处理
@@ -207,8 +216,8 @@ public abstract class AbstractObjectDiff {
             return diffUtils.get(path, nameCn, oldValue, newValue);
 
         } else if ("java.lang.Double".equals(typeName) || Double.TYPE == type) {
-            Double oldValue = field.getDouble(source);
-            Double newValue = field.getDouble(target);
+            String oldValue = field.get(source) == null? null :String.valueOf(field.get(source));
+            String newValue =  field.get(target) == null ? null :String.valueOf(field.get(target));
             return diffUtils.get(path, nameCn, oldValue, newValue);
 
         }
@@ -262,7 +271,7 @@ public abstract class AbstractObjectDiff {
                 logList.add(logStr);
             } else if ("java.sql.Timestamp".equals(typeName) || "java.util.Date".equals(typeName)) {
                 DateFormat format =
-                        new SimpleDateFormat(StringUtils.isBlank(dateFormat) ? "yyyy-MM-dd HH:mm:ss" : dateFormat);
+                    new SimpleDateFormat(StringUtils.isBlank(dateFormat) ? "yyyy-MM-dd HH:mm:ss" : dateFormat);
                 java.sql.Timestamp oldTime = (java.sql.Timestamp) field.get(source);
                 if (oldTime != null) {
                     logStr = "[" + nameCn + "]=" + format.format(oldTime) + " ";
