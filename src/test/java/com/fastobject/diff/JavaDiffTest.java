@@ -44,7 +44,7 @@ public class JavaDiffTest {
         ArrayList<BeanB> list2 = new ArrayList<>();
         list2.add(a2b);
         list2.add(a2b2);
-        final BeanA a2 = new BeanA("2","2",list2);
+        final BeanA a2 = new BeanA("2","2",null);
         a2.setPrice(new BigDecimal("50.852236"));
         a2.setBit(new Byte("22"));
         a2.setUnit(new Short("99"));
