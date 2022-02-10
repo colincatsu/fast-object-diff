@@ -33,6 +33,8 @@ public class JavaDiffTest {
         list.add(a1b2);
         BeanA a1 = new BeanA("1","1",list);
         a1.setStart(new Date());
+        a1.setBit(new Byte("11"));
+        a1.setUnit(new Short("66"));
         //        a1.setPrice(new BigDecimal("10.23"));
 
 
@@ -44,6 +46,8 @@ public class JavaDiffTest {
         list2.add(a2b2);
         final BeanA a2 = new BeanA("2","2",list2);
         a2.setPrice(new BigDecimal("50.852236"));
+        a2.setBit(new Byte("22"));
+        a2.setUnit(new Short("99"));
         List<DiffWapper> diffWappers = AbstractObjectDiff.generateDiff(a1, a2);
 
 

@@ -198,7 +198,6 @@ public abstract class AbstractObjectDiff {
             return diffUtils.get(path, nameCn, oldValue, newValue);
 
         } else if ("java.math.BigDecimal".equals(typeName)) {
-            //
             BigDecimal oldValue = (BigDecimal)field.get(source);
             BigDecimal newValue = (BigDecimal)field.get(target) ;
             if (oldValue!=null && newValue!=null && oldValue.compareTo(newValue) == 0){
@@ -207,7 +206,19 @@ public abstract class AbstractObjectDiff {
             return diffUtils.get(path, nameCn, oldValue, newValue);
         } else if ("java.lang.Byte".equals(typeName) || Byte.TYPE == type) {
             //预留不处理
+            Byte oldValue = (Byte) field.get(source);
+            Byte newValue = (Byte) field.get(target);
+            if (oldValue!=null && newValue!=null && oldValue.compareTo(newValue) == 0){
+                newValue = oldValue;
+            }
+            return diffUtils.get(path, nameCn, oldValue, newValue);
         } else if ("java.lang.Short".equals(typeName) || Short.TYPE == type) {
+            Short oldValue = (Short) field.get(source);
+            Short newValue = (Short) field.get(target);
+            if (oldValue!=null && newValue!=null && oldValue.compareTo(newValue) == 0){
+                newValue = oldValue;
+            }
+            return diffUtils.get(path, nameCn, oldValue, newValue);
             //预留不处理 有需要在处理
         } else if ("java.lang.Float".equals(typeName) || Float.TYPE == type) {
             Float oldValue = field.getFloat(source);

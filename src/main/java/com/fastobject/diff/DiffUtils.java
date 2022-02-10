@@ -33,8 +33,7 @@ public class DiffUtils<T> {
         if (oldStr==null && newStr!=null){
             op = ADD;
         }
-        return DiffWapper.builder().path(path).logName(nameCn).op(op).diffValue(
-                Difference.builder().oldValue(oldStr).newValue(newStr).build()).build();
+        return new DiffWapper(path,nameCn,op,new Difference(oldStr,newStr));
     }
 
 

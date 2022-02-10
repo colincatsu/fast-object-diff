@@ -31,6 +31,12 @@ public class BeanA {
     @DiffLog(name = "价格")
     private BigDecimal price;
 
+    @DiffLog(name = "bit")
+    private Byte bit;
+
+    @DiffLog(name = "short")
+    private Short unit;
+
     public BeanA(String a, String b, List<BeanB> bList) {
         this.a = a;
         this.b = b;
@@ -77,5 +83,19 @@ public class BeanA {
         this.bList = bList;
     }
 
+    public Byte getBit() {
+        return bit;
+    }
 
+    public void setBit(Byte bit) {
+        this.bit = bit;
+    }
+
+    public Short getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Short unit) {
+        this.unit = unit;
+    }
 }
