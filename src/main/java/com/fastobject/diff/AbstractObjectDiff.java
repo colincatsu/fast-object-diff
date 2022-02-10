@@ -2,8 +2,8 @@ package com.fastobject.diff;
 
 
 import org.apache.commons.lang.StringUtils;
-
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -85,7 +85,15 @@ public abstract class AbstractObjectDiff {
                 List<?> newList = (List) field.get(targetObject);
                 Map<Object, Object> oldFilterMap = new HashMap<>();
                 Map<Object, Object> newFilterMap = new HashMap<>();
-                Field[] collFields = oldList.get(0).getClass().getDeclaredFields();
+                Class<?> genricClass = null;
+                if (field.getGenericType() instanceof ParameterizedType) {
+                    // 获取泛型 Class
+                    genricClass = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+                }
+                if (genricClass == null) {
+                    continue;
+                }
+                Field[] collFields = genricClass.getDeclaredFields();
                 Field keyField = null;
                 String keyCnName = "";
                 for (int j = 0; j < collFields.length; j++) {
@@ -100,13 +108,17 @@ public abstract class AbstractObjectDiff {
                     continue;
                 }
                 keyField.setAccessible(true);
-                for (Object o : newList) {
-                    Object o1 = keyField.get(o);
-                    newFilterMap.put(o1, o);
+                if (newList != null) {
+                    for (Object o : newList) {
+                        Object o1 = keyField.get(o);
+                        newFilterMap.put(o1, o);
+                    }
                 }
-                for (Object old : oldList) {
-                    Object o2 = keyField.get(old);
-                    oldFilterMap.put(o2, old);
+                if (oldList != null) {
+                    for (Object old : oldList) {
+                        Object o2 = keyField.get(old);
+                        oldFilterMap.put(o2, old);
+                    }
                 }
                 Set<Object> oldKeySets = oldFilterMap.keySet();
                 Set<Object> newKeySets = newFilterMap.keySet();
