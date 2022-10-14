@@ -25,7 +25,7 @@ public class BeanA {
     @DiffLog(name = "BList集合")
     private List<BeanB> bList;
 
-    @DiffLog(name = "开始时间",dateFormat = "yyyy-dd-MM hh:mm:ss")
+    @DiffLog(name = "开始时间",dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date start;
 
     @DiffLog(name = "价格")

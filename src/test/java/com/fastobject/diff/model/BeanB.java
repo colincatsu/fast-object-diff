@@ -4,6 +4,7 @@ package com.fastobject.diff.model;
 
 import com.fastobject.diff.DiffLog;
 import com.fastobject.diff.DiffLogKey;
+import java.util.Date;
 
 /**
  * Created by colinsu
@@ -19,13 +20,17 @@ public class BeanB {
     @DiffLog(name = "机场")
     private String name;
 
+    @DiffLog(name = "开始时间",dateFormat = "yyyy-MM-dd hh:mm:ss")
+    private Date startDate;
 
 
 
 
-    public BeanB(Long id, String name) {
+
+    public BeanB(Long id, String name,Date startDate) {
         this.id = id;
         this.name = name;
+        this.startDate = startDate;
     }
 
     public Long getId() {

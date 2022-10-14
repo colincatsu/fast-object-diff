@@ -291,10 +291,10 @@ public abstract class AbstractObjectDiff {
                 String oldStr = (String) field.get(source);
                 logStr = "[" + nameCn + "]=" + oldStr + " ";
                 logList.add(logStr);
-            } else if ("java.sql.Timestamp".equals(typeName) || "java.util.Date".equals(typeName)) {
+            } else if ("java.util.Date".equals(typeName)) {
                 DateFormat format =
                     new SimpleDateFormat(StringUtils.isBlank(dateFormat) ? "yyyy-MM-dd HH:mm:ss" : dateFormat);
-                java.sql.Timestamp oldTime = (java.sql.Timestamp) field.get(source);
+                java.util.Date oldTime = (java.util.Date) field.get(source);
                 if (oldTime != null) {
                     logStr = "[" + nameCn + "]=" + format.format(oldTime) + " ";
                     logList.add(logStr);

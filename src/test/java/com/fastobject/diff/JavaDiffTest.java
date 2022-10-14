@@ -23,9 +23,9 @@ public class JavaDiffTest {
 
     private static void test() throws Exception{
 
-        BeanB a1b = new BeanB(1L,"北京");
-        BeanB a1b3 = new BeanB(3L,"3");
-        BeanB a1b2 = new BeanB(2L,"1");
+        BeanB a1b = new BeanB(1L,"北京",new Date());
+        BeanB a1b3 = new BeanB(3L,"3",new Date());
+        BeanB a1b2 = new BeanB(2L,"1",new Date());
 
         ArrayList<BeanB> list = new ArrayList<>();
         list.add(a1b);
@@ -38,8 +38,8 @@ public class JavaDiffTest {
         //        a1.setPrice(new BigDecimal("10.23"));
 
 
-        BeanB a2b = new BeanB(1L,"上海");
-        BeanB a2b2 = new BeanB(2L,"2");
+        BeanB a2b = new BeanB(1L,"上海",new Date());
+        BeanB a2b2 = new BeanB(2L,"2",new Date());
 
         ArrayList<BeanB> list2 = new ArrayList<>();
         list2.add(a2b);
