@@ -17,7 +17,7 @@ maven中央仓库引用:
 <dependency>
   <groupId>com.github.colincatsu</groupId>
   <artifactId>fast-object-diff</artifactId>
-  <version>1.2</version>
+  <version>1.3</version>
 </dependency>
 ```
 
