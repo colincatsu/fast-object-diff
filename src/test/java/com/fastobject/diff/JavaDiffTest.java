@@ -3,6 +3,8 @@ package com.fastobject.diff;
 import com.fastobject.diff.model.BeanA;
 import com.fastobject.diff.model.BeanB;
 
+import com.fastobject.diff.model.BeanC;
+import com.fastobject.diff.model.BeanD;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +29,9 @@ public class JavaDiffTest {
         BeanB a1b3 = new BeanB(3L,"3",new Date());
         BeanB a1b2 = new BeanB(2L,"1",new Date());
 
+        BeanC b1c = new BeanC(12L,"beanC",new Date(),new BeanD("源beand"));
+        BeanC b2c = new BeanC(13L,"beanC2",new Date(),new BeanD("现beand"));
+
         ArrayList<BeanB> list = new ArrayList<>();
         list.add(a1b);
         list.add(a1b3);
@@ -35,6 +40,7 @@ public class JavaDiffTest {
         a1.setStart(new Date());
         a1.setBit(new Byte("11"));
         a1.setUnit(new Short("66"));
+        a1.setBeanC(b1c);
         //        a1.setPrice(new BigDecimal("10.23"));
 
 
@@ -48,6 +54,7 @@ public class JavaDiffTest {
         a2.setPrice(new BigDecimal("50.852236"));
         a2.setBit(new Byte("22"));
         a2.setUnit(new Short("99"));
+        a2.setBeanC(b2c);
         List<DiffWapper> diffWappers = AbstractObjectDiff.generateDiff(a1, a2);
 
 

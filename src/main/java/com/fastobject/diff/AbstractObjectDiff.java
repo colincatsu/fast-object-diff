@@ -138,9 +138,19 @@ public abstract class AbstractObjectDiff {
                     }
                 }
             } else {
-                DiffWapper diffWapper = generateOneDiffs(newPath, nameCn, field, sourceObject, targetObject);
-                if (diffWapper != null) {
-                    diffWappers.add(diffWapper);
+                //判断是否java内部类
+                if (isJavaClass(type)){
+                    DiffWapper diffWapper = generateOneDiffs(newPath, nameCn, field, sourceObject, targetObject);
+                    if (diffWapper != null) {
+                        diffWappers.add(diffWapper);
+                    }
+                } else {
+                    //如自定义bean则走递归方法
+                    List<DiffWapper> collectDiff = generateDiff(newPath, nameCn,
+                        field.get(sourceObject), field.get(targetObject));
+                    if (collectDiff != null) {
+                        diffWappers.addAll(collectDiff);
+                    }
                 }
             }
 
@@ -312,6 +322,9 @@ public abstract class AbstractObjectDiff {
     }
 
 
+    public static boolean isJavaClass(Class<?> clz) {
+        return clz != null && clz.getClassLoader() == null;
+    }
 
 
 
