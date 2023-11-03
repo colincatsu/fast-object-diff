@@ -7,13 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by colinsu
@@ -21,6 +15,7 @@ import java.util.Set;
  */
 public abstract class AbstractObjectDiff {
 
+    public static final Field[] EMPTY_FIELD_ARRAY = {};
 
     protected abstract String genDiffStr(Object sourceObject, Object targetObject) throws Exception;
 
@@ -58,7 +53,7 @@ public abstract class AbstractObjectDiff {
             return null;
         }
 
-        Field[] fields = sourceObject.getClass().getDeclaredFields();
+        Field[] fields = getAllFields(sourceObject.getClass());
 
         for (int i = 0; i < fields.length; i++) {
             final Field field = fields[i];
@@ -93,7 +88,7 @@ public abstract class AbstractObjectDiff {
                 if (genricClass == null) {
                     continue;
                 }
-                Field[] collFields = genricClass.getDeclaredFields();
+                Field[] collFields = getAllFields(genricClass);
                 Field keyField = null;
                 String keyCnName = "";
                 for (int j = 0; j < collFields.length; j++) {
@@ -284,7 +279,7 @@ public abstract class AbstractObjectDiff {
             return "";
         }
         List<String> logList = new ArrayList<>();
-        Field[] fields = source.getClass().getDeclaredFields();
+        Field[] fields = getAllFields(source.getClass());
         for (int i = 0; i < fields.length; i++) {
             String logStr = "";
             Field field = fields[i];
@@ -326,6 +321,20 @@ public abstract class AbstractObjectDiff {
         return clz != null && clz.getClassLoader() == null;
     }
 
-
+    /**
+     * org.apache.commons.lang3.reflect.FieldUtils.getAllFields(),version 3.13.0
+     */
+    private static Field[] getAllFields(final Class<?> cls) {
+        if (cls == null)
+            throw new NullPointerException("cls");
+        final List<Field> allFields = new ArrayList<>();
+        Class<?> currentClass = cls;
+        while (currentClass != null) {
+            final Field[] declaredFields = currentClass.getDeclaredFields();
+            Collections.addAll(allFields, declaredFields);
+            currentClass = currentClass.getSuperclass();
+        }
+        return allFields.toArray(EMPTY_FIELD_ARRAY);
+    }
 
 }
