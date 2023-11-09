@@ -125,8 +125,8 @@ public abstract class AbstractObjectDiff {
                 for (Object result : resultSet) {
                     Object oldOb = oldFilterMap.get(result);
                     Object newOb = newFilterMap.get(result);
-                    String oBPath = newPath + "/" + result.toString();
-                    String oBcnName = nameCn + "." + keyCnName + "[" + result.toString() + "]";
+                    String oBPath = newPath + "/" + (result == null ? "null" : result.toString());
+                    String oBcnName = nameCn + "." + keyCnName + "[" + (result == null ? "null" : result.toString()) + "]";
                     List<DiffWapper> collectDiff = generateDiff(oBPath, oBcnName, oldOb, newOb);
                     if (collectDiff != null) {
                         diffWappers.addAll(collectDiff);
@@ -291,6 +291,8 @@ public abstract class AbstractObjectDiff {
             if (logVo != null) {
                 nameCn = logVo.name();
                 dateFormat = logVo.dateFormat();
+            } else {
+                continue;
             }
             if ("java.lang.String".equals(typeName)) {
                 String oldStr = (String) field.get(source);
@@ -306,13 +308,13 @@ public abstract class AbstractObjectDiff {
                 }
             } else {
                 Object oldValue = (Object) field.get(source);
-                logStr = "[" + nameCn + "]=" + oldValue.toString() + " ";
+                logStr = "[" + nameCn + "]=" + (oldValue == null ? "null" : oldValue.toString()) + " ";
                 logList.add(logStr);
             }
 
 
         }
-        return StringUtils.join(logList.iterator(),",");
+        return StringUtils.join(logList.iterator(),",").trim();
 
     }
 

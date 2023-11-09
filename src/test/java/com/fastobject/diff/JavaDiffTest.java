@@ -24,7 +24,7 @@ public class JavaDiffTest {
 
         BeanB a1b = new BeanB(1L,"北京",new Date());
         BeanB a1b3 = new BeanB(3L,"3",new Date());
-        BeanB a1b2 = new BeanB(2L,"1",new Date());
+        BeanB a1b2 = new BeanB(2L, "1", new Date(), new BigDecimal(100), 0.9);
 
         BeanC b1c = new BeanC(12L,"beanC",new Date(),new BeanD("源beand"));
         BeanC b2c = new BeanC(13L,"beanC2",new Date(),new BeanD("现beand"));
