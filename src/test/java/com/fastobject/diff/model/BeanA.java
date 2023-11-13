@@ -40,6 +40,9 @@ public class BeanA {
     @DiffLog(name = "beanC")
     private BeanC beanC;
 
+    @DiffLog(name = "beanE")
+    private BeanE beanE;
+
     public BeanA(String a, String b, List<BeanB> bList) {
         this.a = a;
         this.b = b;
@@ -120,5 +123,13 @@ public class BeanA {
 
     public void setBeanC(BeanC beanC) {
         this.beanC = beanC;
+    }
+
+    public BeanE getBeanE() {
+        return beanE;
+    }
+
+    public void setBeanE(BeanE beanE) {
+        this.beanE = beanE;
     }
 }

@@ -7,13 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by colinsu
@@ -21,6 +15,7 @@ import java.util.Set;
  */
 public abstract class AbstractObjectDiff {
 
+    public static final Field[] EMPTY_FIELD_ARRAY = {};
 
     protected abstract String genDiffStr(Object sourceObject, Object targetObject) throws Exception;
 
@@ -58,7 +53,7 @@ public abstract class AbstractObjectDiff {
             return null;
         }
 
-        Field[] fields = sourceObject.getClass().getDeclaredFields();
+        Field[] fields = getAllFields(sourceObject.getClass());
 
         for (int i = 0; i < fields.length; i++) {
             final Field field = fields[i];
@@ -93,7 +88,7 @@ public abstract class AbstractObjectDiff {
                 if (genricClass == null) {
                     continue;
                 }
-                Field[] collFields = genricClass.getDeclaredFields();
+                Field[] collFields = getAllFields(genricClass);
                 Field keyField = null;
                 String keyCnName = "";
                 for (int j = 0; j < collFields.length; j++) {
@@ -130,8 +125,8 @@ public abstract class AbstractObjectDiff {
                 for (Object result : resultSet) {
                     Object oldOb = oldFilterMap.get(result);
                     Object newOb = newFilterMap.get(result);
-                    String oBPath = newPath + "/" + result.toString();
-                    String oBcnName = nameCn + "." + keyCnName + "[" + result.toString() + "]";
+                    String oBPath = newPath + "/" + (result == null ? "null" : result.toString());
+                    String oBcnName = nameCn + "." + keyCnName + "[" + (result == null ? "null" : result.toString()) + "]";
                     List<DiffWapper> collectDiff = generateDiff(oBPath, oBcnName, oldOb, newOb);
                     if (collectDiff != null) {
                         diffWappers.addAll(collectDiff);
@@ -284,7 +279,7 @@ public abstract class AbstractObjectDiff {
             return "";
         }
         List<String> logList = new ArrayList<>();
-        Field[] fields = source.getClass().getDeclaredFields();
+        Field[] fields = getAllFields(source.getClass());
         for (int i = 0; i < fields.length; i++) {
             String logStr = "";
             Field field = fields[i];
@@ -296,6 +291,8 @@ public abstract class AbstractObjectDiff {
             if (logVo != null) {
                 nameCn = logVo.name();
                 dateFormat = logVo.dateFormat();
+            } else {
+                continue;
             }
             if ("java.lang.String".equals(typeName)) {
                 String oldStr = (String) field.get(source);
@@ -311,13 +308,13 @@ public abstract class AbstractObjectDiff {
                 }
             } else {
                 Object oldValue = (Object) field.get(source);
-                logStr = "[" + nameCn + "]=" + oldValue.toString() + " ";
+                logStr = "[" + nameCn + "]=" + (oldValue == null ? "null" : oldValue.toString()) + " ";
                 logList.add(logStr);
             }
 
 
         }
-        return StringUtils.join(logList.iterator(),",");
+        return StringUtils.join(logList.iterator(),",").trim();
 
     }
 
@@ -326,6 +323,20 @@ public abstract class AbstractObjectDiff {
         return clz != null && clz.getClassLoader() == null;
     }
 
-
+    /**
+     * org.apache.commons.lang3.reflect.FieldUtils.getAllFields(),version 3.13.0
+     */
+    private static Field[] getAllFields(final Class<?> cls) {
+        if (cls == null)
+            throw new NullPointerException("cls");
+        final List<Field> allFields = new ArrayList<>();
+        Class<?> currentClass = cls;
+        while (currentClass != null) {
+            final Field[] declaredFields = currentClass.getDeclaredFields();
+            Collections.addAll(allFields, declaredFields);
+            currentClass = currentClass.getSuperclass();
+        }
+        return allFields.toArray(EMPTY_FIELD_ARRAY);
+    }
 
 }
