@@ -23,8 +23,10 @@ public class JavaDiffTest {
     private static void test() throws Exception{
 
         BeanB a1b = new BeanB(1L,"北京",new Date());
+        a1b.setConsumptionLimit(false);
         BeanB a1b3 = new BeanB(3L,"3",new Date());
         BeanB a1b2 = new BeanB(2L, "1", new Date(), new BigDecimal(100), 0.9);
+        a1b2.setConsumptionLimit(true);
 
         BeanC b1c = new BeanC(12L,"beanC",new Date(),new BeanD("源beand"));
         BeanC b2c = new BeanC(13L,"beanC2",new Date(),new BeanD("现beand"));
@@ -42,6 +44,8 @@ public class JavaDiffTest {
         a1.setUnit(new Short("66"));
         a1.setBeanC(b1c);
         a1.setBeanE(a1e);
+        a1.setaBoolean(false);
+
         //        a1.setPrice(new BigDecimal("10.23"));
 
 
@@ -60,6 +64,8 @@ public class JavaDiffTest {
         a2.setUnit(new Short("99"));
         a2.setBeanC(b2c);
         a2.setBeanE(a2e);
+        a2.setaBoolean(true);
+
         List<DiffWapper> diffWappers = AbstractObjectDiff.generateDiff(a1, a2);
 
 

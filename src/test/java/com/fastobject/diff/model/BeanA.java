@@ -34,6 +34,9 @@ public class BeanA {
     @DiffLog(name = "bit")
     private Byte bit;
 
+    @DiffLog(name = "aBoolean")
+    private Boolean aBoolean;
+
     @DiffLog(name = "short")
     private Short unit;
 
@@ -131,5 +134,13 @@ public class BeanA {
 
     public void setBeanE(BeanE beanE) {
         this.beanE = beanE;
+    }
+
+    public Boolean getaBoolean() {
+        return aBoolean;
+    }
+
+    public void setaBoolean(Boolean aBoolean) {
+        this.aBoolean = aBoolean;
     }
 }

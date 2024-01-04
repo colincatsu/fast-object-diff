@@ -210,8 +210,8 @@ public abstract class AbstractObjectDiff {
             return diffUtils.get(path, nameCn, oldValue, newValue);
 
         } else if ("java.lang.Boolean".equals(typeName) || Boolean.TYPE == type) {
-            Boolean oldValue = field.getBoolean(source);
-            Boolean newValue = field.getBoolean(target);
+            Boolean oldValue = (Boolean)field.get(source);
+            Boolean newValue = (Boolean)field.get(target);
             return diffUtils.get(path, nameCn, oldValue, newValue);
 
         } else if ("java.math.BigDecimal".equals(typeName)) {

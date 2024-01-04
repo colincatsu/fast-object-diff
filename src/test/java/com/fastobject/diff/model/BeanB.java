@@ -28,6 +28,9 @@ public class BeanB {
     @DiffLog(name = "订单金额", ignore = true)
     private BigDecimal price;
 
+    @DiffLog(name = "消费限制")
+    private Boolean consumptionLimit;
+
     private double discount;
 
 
@@ -84,5 +87,13 @@ public class BeanB {
 
     public void setDiscount(double discount) {
         this.discount = discount;
+    }
+
+    public Boolean getConsumptionLimit() {
+        return consumptionLimit;
+    }
+
+    public void setConsumptionLimit(Boolean consumptionLimit) {
+        this.consumptionLimit = consumptionLimit;
     }
 }
