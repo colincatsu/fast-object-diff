@@ -5,6 +5,7 @@ package com.fastobject.diff.model;
 import com.fastobject.diff.DiffLog;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class BeanA {
 
     @DiffLog(name = "aBoolean")
     private Boolean aBoolean;
+
+    @DiffLog(name = "时间LocalDateTime")
+    private LocalDateTime localDateTime;
 
     @DiffLog(name = "short")
     private Short unit;
@@ -142,5 +146,13 @@ public class BeanA {
 
     public void setaBoolean(Boolean aBoolean) {
         this.aBoolean = aBoolean;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 }

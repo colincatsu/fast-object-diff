@@ -1,6 +1,7 @@
 package com.fastobject.diff;
 
 
+import java.time.format.DateTimeFormatter;
 import org.apache.commons.lang.StringUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -252,6 +253,28 @@ public abstract class AbstractObjectDiff {
             DateFormat format = new SimpleDateFormat(StringUtils.isBlank(dateFormat) ? "yyyy-MM-dd" : dateFormat);
             java.util.Date newTime = (java.util.Date) field.get(target);
             java.util.Date oldTime = (java.util.Date) field.get(source);
+            String newTempTimeStr = "";
+            String oldTimeTimeStr = "";
+            if (newTime != null) {
+                newTempTimeStr = format.format(newTime);
+            }
+            if (oldTime != null) {
+                oldTimeTimeStr = format.format(oldTime);
+            }
+            if (oldTime == newTime && oldTime == null) {
+                return null;
+            }
+            if (oldTime == null || newTime == null) {
+                return DiffUtils.getDiffWapper(path, nameCn, oldTime==null ?null:oldTimeTimeStr, newTime==null?null: newTempTimeStr);
+            }
+            if (!StringUtils.equals(newTempTimeStr, oldTimeTimeStr)) {
+                return DiffUtils.getDiffWapper(path, nameCn, oldTimeTimeStr, newTempTimeStr);
+            }
+        }
+        else if ("java.time.LocalDateTime".equals(typeName)) {
+            DateTimeFormatter format =  DateTimeFormatter.ofPattern(StringUtils.isBlank(dateFormat) ? "yyyy-MM-dd hh:mm:ss" : dateFormat);
+            java.time.LocalDateTime newTime = (java.time.LocalDateTime) field.get(target);
+            java.time.LocalDateTime oldTime = (java.time.LocalDateTime) field.get(source);
             String newTempTimeStr = "";
             String oldTimeTimeStr = "";
             if (newTime != null) {

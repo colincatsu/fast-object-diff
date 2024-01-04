@@ -3,6 +3,7 @@ package com.fastobject.diff;
 import com.fastobject.diff.model.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,7 @@ public class JavaDiffTest {
         a1.setBeanC(b1c);
         a1.setBeanE(a1e);
         a1.setaBoolean(false);
+        a1.setLocalDateTime(LocalDateTime.now());
 
         //        a1.setPrice(new BigDecimal("10.23"));
 
@@ -65,6 +67,8 @@ public class JavaDiffTest {
         a2.setBeanC(b2c);
         a2.setBeanE(a2e);
         a2.setaBoolean(true);
+        a2.setLocalDateTime(LocalDateTime.now().plusSeconds(1000));
+
 
         List<DiffWapper> diffWappers = AbstractObjectDiff.generateDiff(a1, a2);
 
