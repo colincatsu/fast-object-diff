@@ -12,13 +12,13 @@ Fast-object-diff就这样诞生.
 6. 集合中可根据某个key进行对应diff记录,方便乱序中使用diff对比某个Object
 7. 增加Byte和Short类型判断
 8. 增加自定义类型比较,具体使用参考测试用例
-
+9. 增加java8 LocalDataTime比较,具体使用参考测试用例
 maven中央仓库引用:
 ```
 <dependency>
   <groupId>com.github.colincatsu</groupId>
   <artifactId>fast-object-diff</artifactId>
-  <version>1.5</version>
+  <version>1.6</version>
 </dependency>
 ```
 
