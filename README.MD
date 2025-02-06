@@ -13,12 +13,14 @@ Fast-object-diff就这样诞生.
 7. 增加Byte和Short类型判断
 8. 增加自定义类型比较,具体使用参考测试用例
 9. 增加java8 LocalDataTime比较,具体使用参考测试用例
+10. 现在大部分采用的是RPC等微服务架构,增加基于配置的方法比较 ,不依赖注解,同时兼容注解和配置 issues#1
+
 maven中央仓库引用:
 ```
 <dependency>
   <groupId>com.github.colincatsu</groupId>
   <artifactId>fast-object-diff</artifactId>
-  <version>1.6</version>
+  <version>1.7</version>
 </dependency>
 ```
 
@@ -177,4 +179,49 @@ public class ChineseObjectDiff extends AbstractObjectDiff {
 
 }
 
+```
+
+配置使用yaml进行配置,配置classes以及对应的fields即可,如下:
+```yaml
+classes:
+  - className: com.fastobject.diff.model.BeanF
+    fields:
+      - name: a
+        fullName: 测试a
+        ignore: false
+      - name: b
+        fullName: 测试b
+        ignore: true
+      - name: bList
+        fullName: BList集合
+      - name: start
+        fullName: 开始时间
+        dateFormat : "yyyy-MM-dd hh:mm:ss"
+      - name: price
+        fullName: 价格
+  - className: com.fastobject.diff.model.BeanG
+    fields:
+      - name: id
+        fullName: 主键
+        ignore: false
+        diffLogKey:
+          name: 订单编号
+      - name: name
+        fullName: 机场
+        ignore: false
+      - name : startDate
+        fullName : 开始时间
+        dateFormat : "yyyy-MM-dd hh:mm:ss"
+      - name: price
+        fullName: 订单金额
+        ignore: true
+      - name: consumptionLimit
+        fullName: 消费限制
+```
+使用方法和注解类似,参考单元测试 YamlConfigDiffTest.java 进行使用即可
+
+```java
+    DiffConfig diffConfig = ConfigReader.readConfig("diff-config.yaml");
+    List<DiffWapper> diffWappers = AbstractObjectDiff.generateDiff(diffConfig,a1, a2);
+    String s = ChineseObjectDiff.genChineseDiffStr(diffConfig,a1, a2);
 ```

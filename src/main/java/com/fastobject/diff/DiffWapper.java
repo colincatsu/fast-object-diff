@@ -52,4 +52,15 @@ public class DiffWapper implements Serializable {
     public void setDiffValue(Difference diffValue) {
         this.diffValue = diffValue;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("DiffWapper{");
+        sb.append("path='").append(path).append('\'');
+        sb.append(", logName='").append(logName).append('\'');
+        sb.append(", op='").append(op).append('\'');
+        sb.append(", diffValue=").append(diffValue);
+        sb.append('}');
+        return sb.toString();
+    }
 }
