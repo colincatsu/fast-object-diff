@@ -6,7 +6,7 @@
 
     <groupId>com.github.colincatsu</groupId>
     <artifactId>fast-object-diff</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
     <url>https://github.com/colincatsu/fast-object-diff</url>
     <name>fast-object-diff</name>
     <description>Java object diff</description>
@@ -44,6 +44,11 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.30</version>
         </dependency>
     </dependencies>
     <profiles>

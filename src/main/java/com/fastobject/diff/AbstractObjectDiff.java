@@ -1,6 +1,7 @@
 package com.fastobject.diff;
 
 
+import com.fastobject.diff.DiffConfig.FieldConfig;
 import java.time.format.DateTimeFormatter;
 import org.apache.commons.lang.StringUtils;
 import java.lang.reflect.Field;
@@ -20,16 +21,28 @@ public abstract class AbstractObjectDiff {
 
     protected abstract String genDiffStr(Object sourceObject, Object targetObject) throws Exception;
 
+    protected abstract String genDiffStr(DiffConfig diffConfig,Object sourceObject, Object targetObject) throws Exception;
+
+
     public static String genChineseDiffStr(Object sourceObject, Object targetObject) throws Exception {
         List<DiffWapper> diffWappers = generateDiff(sourceObject, targetObject);
         return DiffUtils.genDiffStr(diffWappers);
     }
 
-    public static List<DiffWapper> generateDiff(Object sourceObject, Object targetObject) throws Exception {
-        return generateDiff("", "", sourceObject, targetObject);
+    public static String genChineseDiffStr(DiffConfig diffConfig,Object sourceObject, Object targetObject) throws Exception {
+        List<DiffWapper> diffWappers = generateDiff(diffConfig,sourceObject, targetObject);
+        return DiffUtils.genDiffStr(diffWappers);
     }
 
-    private static List<DiffWapper> generateDiff(String path, String cnName, Object sourceObject, Object targetObject)
+    public static List<DiffWapper> generateDiff(Object sourceObject, Object targetObject) throws Exception {
+        return generateDiff("", "", sourceObject, targetObject,null);
+    }
+
+    public static List<DiffWapper> generateDiff(DiffConfig diffConfig,Object sourceObject, Object targetObject) throws Exception {
+        return generateDiff("", "", sourceObject, targetObject,diffConfig);
+    }
+
+    private static List<DiffWapper> generateDiff(String path, String cnName, Object sourceObject, Object targetObject,DiffConfig diffConfig)
         throws Exception {
         List<DiffWapper> diffWappers = new ArrayList<>();
 
@@ -39,8 +52,8 @@ public abstract class AbstractObjectDiff {
 
         if (sourceObject == null || targetObject == null) {
             DiffWapper diffWapper = DiffUtils
-                .getDiffWapper(path, cnName, (sourceObject == null ? null : getObjectString(sourceObject)),
-                    targetObject == null ? null : getObjectString(targetObject));
+                .getDiffWapper(path, cnName, (sourceObject == null ? null : getObjectString(sourceObject,diffConfig)),
+                    targetObject == null ? null : getObjectString(targetObject,diffConfig));
             diffWappers.add(diffWapper);
             return diffWappers;
         }
@@ -62,7 +75,27 @@ public abstract class AbstractObjectDiff {
             String newPath = path + "/" + field.getName();
             String nameCn = newPath;
             field.setAccessible(true);
-            if (field.isAnnotationPresent(DiffLog.class)) {
+            FieldConfig fieldConfig = null;
+            if (diffConfig != null ) {
+                Map<String, FieldConfig> classFieldConfig = diffConfig.getClassFields().get(sourceObject.getClass().getName());
+                if (classFieldConfig == null){
+                    continue;
+                }
+                fieldConfig = classFieldConfig.get(field.getName());
+                if (fieldConfig!=null){
+                    if (cnName == null || cnName.equals("")) {
+                        nameCn = fieldConfig.getFullName();
+                    } else {
+                        nameCn = cnName + "." + fieldConfig.getFullName();
+                    }
+                    if (fieldConfig.isIgnore()){
+                        continue;
+                    }
+                }else{
+                    continue;
+                }
+            }
+            else if (field.isAnnotationPresent(DiffLog.class)) {
                 DiffLog logVo = field.getAnnotation(DiffLog.class);
                 if (cnName == null || cnName.equals("")) {
                     nameCn = logVo.name();
@@ -92,8 +125,21 @@ public abstract class AbstractObjectDiff {
                 Field[] collFields = getAllFields(genricClass);
                 Field keyField = null;
                 String keyCnName = "";
+                Map<String, FieldConfig> collFieldConfig = null ;
+                if (diffConfig != null ){
+                    collFieldConfig = diffConfig.getClassFields().get(genricClass.getName());
+                }
+
                 for (int j = 0; j < collFields.length; j++) {
-                    if (collFields[j].isAnnotationPresent(DiffLogKey.class)) {
+                    if (diffConfig != null && collFieldConfig !=null) {
+                        keyField = collFields[j];
+                        FieldConfig fieldKeyConfig = collFieldConfig.get(keyField.getName());
+                        if (fieldKeyConfig!=null && fieldKeyConfig.getDiffLogKey()!=null){
+                            keyCnName = fieldKeyConfig.getDiffLogKey().getName();
+                            break;
+                        }
+                    }
+                    else if (collFields[j].isAnnotationPresent(DiffLogKey.class)) {
                         keyField = collFields[j];
                         DiffLogKey keyFieldAnnotation = keyField.getAnnotation(DiffLogKey.class);
                         keyCnName = keyFieldAnnotation.name();
@@ -128,7 +174,7 @@ public abstract class AbstractObjectDiff {
                     Object newOb = newFilterMap.get(result);
                     String oBPath = newPath + "/" + (result == null ? "null" : result.toString());
                     String oBcnName = nameCn + "." + keyCnName + "[" + (result == null ? "null" : result.toString()) + "]";
-                    List<DiffWapper> collectDiff = generateDiff(oBPath, oBcnName, oldOb, newOb);
+                    List<DiffWapper> collectDiff = generateDiff(oBPath, oBcnName, oldOb, newOb,diffConfig);
                     if (collectDiff != null) {
                         diffWappers.addAll(collectDiff);
                     }
@@ -136,14 +182,14 @@ public abstract class AbstractObjectDiff {
             } else {
                 //判断是否java内部类
                 if (isJavaClass(type)){
-                    DiffWapper diffWapper = generateOneDiffs(newPath, nameCn, field, sourceObject, targetObject);
+                    DiffWapper diffWapper = generateOneDiffs(newPath, nameCn, field, sourceObject, targetObject,fieldConfig);
                     if (diffWapper != null) {
                         diffWappers.add(diffWapper);
                     }
                 } else {
                     //如自定义bean则走递归方法
                     List<DiffWapper> collectDiff = generateDiff(newPath, nameCn,
-                        field.get(sourceObject), field.get(targetObject));
+                        field.get(sourceObject), field.get(targetObject),diffConfig);
                     if (collectDiff != null) {
                         diffWappers.addAll(collectDiff);
                     }
@@ -156,7 +202,7 @@ public abstract class AbstractObjectDiff {
 
 
 
-    private static DiffWapper generateOneDiffs(String path, String nameCn, Field field, Object source, Object target)
+    private static DiffWapper generateOneDiffs(String path, String nameCn, Field field, Object source, Object target,FieldConfig fieldConfig)
         throws Exception {
         //判断是普通Object还是Collection
         //过滤一些不需要的key
@@ -165,14 +211,22 @@ public abstract class AbstractObjectDiff {
         String typeName = field.getType().getName();
         Class<?> type = field.getType();
         field.setAccessible(true);
-        DiffLog logVo = field.getAnnotation(DiffLog.class);
         String dateFormat = "";
-        if (logVo != null) {
-            dateFormat = logVo.dateFormat();
-            if (logVo.ignore()){
+        if (fieldConfig!=null){
+            dateFormat = fieldConfig.getDateFormat();
+            if (fieldConfig.isIgnore()){
                 return null;
             }
+        }else{
+            DiffLog logVo = field.getAnnotation(DiffLog.class);
+            if (logVo != null) {
+                dateFormat = logVo.dateFormat();
+                if (logVo.ignore()){
+                    return null;
+                }
+            }
         }
+
         if ("java.lang.String".equals(typeName)) {
             String oldStr = (String) field.get(source);
             String newStr = (String) field.get(target);
@@ -297,26 +351,40 @@ public abstract class AbstractObjectDiff {
     }
 
 
-    private static String getObjectString(Object source) throws Exception {
+    private static String getObjectString(Object source,DiffConfig diffConfig) throws Exception {
         if (source == null) {
             return "";
         }
         List<String> logList = new ArrayList<>();
         Field[] fields = getAllFields(source.getClass());
+        Map<String, FieldConfig> classFieldConfig = null;
+        if (diffConfig!=null){
+            classFieldConfig = diffConfig.getClassFields().get(source.getClass().getName());
+        }
         for (int i = 0; i < fields.length; i++) {
             String logStr = "";
             Field field = fields[i];
             String typeName = field.getType().getName();
             field.setAccessible(true);
-            DiffLog logVo = field.getAnnotation(DiffLog.class);
             String nameCn = field.getName();
             String dateFormat = "";
-            if (logVo != null) {
-                nameCn = logVo.name();
-                dateFormat = logVo.dateFormat();
-            } else {
-                continue;
+            if (classFieldConfig!=null){
+                FieldConfig fieldConfig = classFieldConfig.get(field.getName());
+                if (fieldConfig == null){
+                    continue;
+                }
+                nameCn = fieldConfig.getFullName();
+                dateFormat = fieldConfig.getDateFormat();
+            }else{
+                DiffLog logVo = field.getAnnotation(DiffLog.class);
+                if (logVo != null) {
+                    nameCn = logVo.name();
+                    dateFormat = logVo.dateFormat();
+                } else {
+                    continue;
+                }
             }
+
             if ("java.lang.String".equals(typeName)) {
                 String oldStr = (String) field.get(source);
                 logStr = "[" + nameCn + "]=" + oldStr + " ";
