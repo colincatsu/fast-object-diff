@@ -14,6 +14,10 @@ classes:
         dateFormat : "yyyy-MM-dd hh:mm:ss"
       - name: price
         fullName: 价格
+      - name: bit
+        fullName: bit值
+      - name: unit
+        fullName: 单位
   - className: com.fastobject.diff.model.BeanG
     fields:
       - name: id

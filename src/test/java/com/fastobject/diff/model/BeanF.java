@@ -2,6 +2,7 @@ package com.fastobject.diff.model;
 
 import com.fastobject.diff.DiffLog;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,18 @@ public class BeanF {
 
 //    @DiffLog(name = "价格")
     private BigDecimal price;
+
+    @DiffLog(name = "bit")
+    private Byte bit;
+
+    @DiffLog(name = "aBoolean")
+    private Boolean aBoolean;
+
+    @DiffLog(name = "时间LocalDateTime")
+    private LocalDateTime localDateTime;
+
+    @DiffLog(name = "short")
+    private Short unit;
 
     public BeanF() {
 
@@ -76,5 +89,37 @@ public class BeanF {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Byte getBit() {
+        return bit;
+    }
+
+    public void setBit(Byte bit) {
+        this.bit = bit;
+    }
+
+    public Boolean getaBoolean() {
+        return aBoolean;
+    }
+
+    public void setaBoolean(Boolean aBoolean) {
+        this.aBoolean = aBoolean;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public Short getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Short unit) {
+        this.unit = unit;
     }
 }

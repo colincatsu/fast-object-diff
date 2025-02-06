@@ -31,11 +31,13 @@ public class YamlConfigDiffTest {
 
         BeanF a1 = new BeanF("1","1",list);
         a1.setStart(new Date());
-
+        a1.setBit(new Byte("11"));
+        a1.setUnit(new Short("66"));
 
         final BeanF a2 = new BeanF("2","2",null);
         a2.setPrice(new BigDecimal("50.852236"));
-
+        a2.setBit(new Byte("22"));
+        a2.setUnit(new Short("99"));
 
         List<DiffWapper> diffWappers = AbstractObjectDiff.generateDiff(diffConfig,a1, a2);
 //        for (DiffWapper diffWapper : diffWappers) {
