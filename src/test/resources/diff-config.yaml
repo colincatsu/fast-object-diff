@@ -32,3 +32,5 @@ classes:
         ignore: true
       - name: consumptionLimit
         fullName: 消费限制
+      - name: discount
+        fullName: 折扣比例
